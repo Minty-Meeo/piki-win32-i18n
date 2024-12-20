@@ -10,3 +10,11 @@
 "レベル音距離","Level Sound Distance","SE Constants"
 "ボスＢＧＭ開始距離","Boss BGM start distance",
 "ボスＢＧＭ終了距離","Boss BGM end distance",
+"ペレット","pellet<TODO>","pelletMgr"
+"シェイプ管理","shapeMgr",
+"ジョイント","joint","This one might conflict according to old notes"
+"なし","none",
+"常駐","Permanently loaded",
+"あればロード","Load if available",
+"TEKI 次第でロード","Load depending on TEKI",
+"BOSS 次第でロード","Load depending on BOSS",
