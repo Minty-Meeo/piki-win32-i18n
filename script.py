@@ -16,7 +16,7 @@ def main():
     for row in csvfile:
         if len(row) < 2:
             continue
-        string_location = BASE_ADDR + rdata.virtual_address + rdata.search(row[0].encode("shift-jis"))
+        string_location = BASE_ADDR + rdata.virtual_address + rdata.search(row[0].encode("shift-jis") + b'\0')
         eng_bytes = row[1].encode()
         for address in pe.xref(string_location):
             pe.patch_address(BASE_ADDR + address, tuple(struct.pack("<I", cursor)))
