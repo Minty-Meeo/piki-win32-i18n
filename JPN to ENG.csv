@@ -1,9 +1,12 @@
-"SE Constatns","SE Constants"
-"ペレットマネージャ","pelletMgr"
-"仕事オブジェマネージャ","workObjectMgr"
-"AI定数","AI Constants"
-"ジェネレータ(default)","generator (default)"
-"ジェネレータ(init)","generator (init)"
-"ジェネレータ(daily)","generator (daily)"
-"ジェネレータ(plants)","generator (plants)"
-"ジェネレータ(limit)","generator (limit)"
+"SE Constatns","SE Constants","GameFlow"
+"ペレットマネージャ","pelletMgr",
+"仕事オブジェマネージャ","workObjectMgr",
+"AI定数","AI Constants",
+"ジェネレータ(default)","generator (default)",
+"ジェネレータ(init)","generator (init)",
+"ジェネレータ(daily)","generator (daily)",
+"ジェネレータ(plants)","generator (plants)",
+"ジェネレータ(limit)","generator (limit)",
+"レベル音距離","Level Sound Distance","SE Constants"
+"ボスＢＧＭ開始距離","Boss BGM start distance",
+"ボスＢＧＭ終了距離","Boss BGM end distance",

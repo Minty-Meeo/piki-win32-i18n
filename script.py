@@ -13,9 +13,11 @@ def main():
     i18n_blob = bytearray()
     cursor = BASE_ADDR + I18N_ADDR
 
-    for jpn, eng in csvfile:
-        string_location = BASE_ADDR + rdata.virtual_address + rdata.search(jpn.encode("shift-jis"))
-        eng_bytes = eng.encode()
+    for row in csvfile:
+        if len(row) < 2:
+            continue
+        string_location = BASE_ADDR + rdata.virtual_address + rdata.search(row[0].encode("shift-jis"))
+        eng_bytes = row[1].encode()
         for address in pe.xref(string_location):
             pe.patch_address(BASE_ADDR + address, tuple(struct.pack("<I", cursor)))
         i18n_blob += eng_bytes + b'\0'
