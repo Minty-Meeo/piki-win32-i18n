@@ -1,3 +1,10 @@
+"黄ペレット","yellow pellet","GenObjectBoss menu"
+"赤ペレット","red pellet",
+"青ペレット","blue pellet",
+"２０ペレット","20 pellet",
+"１０ペレット","10 pellet",
+"５ペレット","5 pellet",
+"１ペレット","1 pellet",
 "SE Constatns","SE Constants","GameFlow"
 "ペレットマネージャ","pelletMgr",
 "仕事オブジェマネージャ","workObjectMgr",
@@ -18,3 +25,10 @@
 "あればロード","Load if available",
 "TEKI 次第でロード","Load depending on TEKI",
 "BOSS 次第でロード","Load depending on BOSS",
+"どーするの？","Input?","Key Setting (TODO: this line’s translation is truncated because GUI looks bad)"
+"投げ","throw",
+"集合カーソル","whistle",
+"抜き","pull out",
+"アタック","attack",
+"解散","dismiss",
+"メニュー","menu",
