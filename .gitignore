@@ -2,3 +2,5 @@ files
 sys
 plugins
 .~lock*
+*.o
+*.bin

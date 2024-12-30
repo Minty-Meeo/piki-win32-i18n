@@ -1,0 +1,364 @@
+27 strlen calls
+1 Load
+2 Save
+3 Level Sound Distance
+4-11 value box
+
+
+09BC8F35 strlen of "Load", "Save"
+09BCB689 strlen of message
+
+09ACB7C4 draw box for slider
+09ACB807 draw highlight for slider
+09ACB847 draw left end for slider
+09ACB891 draw right end for slider
+09ACB945 draw knob for slider
+
+09ACB998 draw box for text field
+09ACBA33 draw pink fill for text field
+
+19 140 51 20
+19 140 6e 20
+19 is box height
+140 is box width
+51 / 6e is box y
+
+
+
+(ebp - 0x0004)->0x0048
+
+hdc
+x
+y
+lpString
+c
+
+002CF8C8  19010563  
+002CF8CC  00000089  
+002CF8D0  00000058  
+002CF8D4  096A18C0  "Level Sound Distance"
+002CF8D8  00000014  
+
+002CF8C8  19010563  
+002CF8CC  0000009F  
+002CF8D0  00000075  
+002CF8D4  096A1870  "Boss BGM start distance"
+002CF8D8  00000017  
+
+002CF8C8  19010563  
+002CF8CC  0000008B  
+002CF8D0  00000092  
+002CF8D4  096A1820  "Boss BGM end distance"
+002CF8D8  00000015  
+
+
+
+
+0x00000010 is a good string x pos (added to 0x00000020 for a total of 0x00000030)
+
+EDX has 0x20
+ECX has 0x73
+
+09ACB6E2 | 8B45 FC                  | mov eax,dword ptr ss:[ebp-4]                                                                 | 
+09ACB6E5 | 8B48 48                  | mov ecx,dword ptr ds:[eax+48]                                                                |
+09ACB6E8 | 2B4D F4                  | sub ecx,dword ptr ss:[ebp-C]                                                                 |
+09ACB6EB | 8B55 0C                  | mov edx,dword ptr ss:[ebp+C]                                                                 |
+09ACB6EE | 8D440A F6                | lea eax,dword ptr ds:[edx+ecx-A]                                                             |                                                             |
+
+0x001c slider box width (fail)
+0x0020 slider box height
+0x0048 line input x
+0x004c line input width
+0x0050 slider width (not actionable)
+0x0054 left bumper width
+0x0058 slider actionable width
+0x005c slider actionable x pos
+
+
+
+09ACB650 is start of MenuSlider::draw
+MenuSlider derives CoreNode
+Find pointer to example MenuSlider at 09ACB67B (CoreNode::Name(void) call in MenuSlider::draw)
+
+MenuSlider::draw is called at 09AC697F in a loop
+We have a MenuSlider at 002DFE58
+
+09AC68D5 calls CoreNode::Child()  |  003080B8->Child = 002DFE58   |   Not stable yet (next construction is 00308CC0) (now at 002EABD8)
+MenuSlider is member +0x40 into some struct (MenuGroup?) (see 09AC68D0, 09AC68F3)
+
+MenuGroup->0x50 is child (first MenuSlider)
+MenuGroup is in ECX at 09AD4A69
+09AD4A69 | FF50 1C                  | call dword ptr ds:[eax+1C]                                                                   | [eax+1C]:GetObjectList+FF
+
+
+MenuSlider at 002EAC50
+MenuGroup (holds first MenuSlider) at 002EABD8
+
+
+CoreNode::CoreNode(char*) constructor is *very* easy to breakpoint.
+node's name is the message shown by the slider (convenient!) "Level Sound Distance"
+09ACB504 writes actionable slider width
+
+// _00 = VTBL
+char* mName;        // _04
+CoreNode* mParent;  // _08
+CoreNode* mNext;    // _0C
+CoreNode* mChild;   // _10
+int display_x;      // _14
+int display_y;      // _18
+int display_width;  // _1C  // Controls list outline + right bumper is a fixed offset away from right
+int display_height; // _20  // All elements inside scale nicely. Epic.
+unk : 32;           // _24
+unk* ;              // _28
+unk* ;              // _2C
+unk : 32;           // _30
+unk : 32;           // _34
+unk : 32;           // _38
+unk : 32;           // _3C
+unk* ;              // _40
+unk* ;              // _44
+int slider_display_x;           // _48  // Currently Calculated by `psizl.x of "W" * strlen`
+int textbox_rightbound_offset;  // _4C  // Makes texbox visually stretch, but actionable size is not controlled here!
+int slider_display_width;       // _50  // not the actionable width!  Currently Calculated by display_width - slider_display_x - textbox_rightbound_offset
+int bumper_display_width;       // _54  // Probably don't need to modify this one
+int slider_actionable_width;    // _58  // 0x28 (slider_display_width) - 0x19 (ECX)  // ECX = lea eax + eax + 5  // eax = this->0x54 (bumper display width)  // slider_display_width - (bumper_display_width * 2 + 5)
+int slider_actionable_x;        // _5C  // EAX + EDX + 3  // EAX = this->0x48  // EDX = this->0x54
+unk : 32;                       // _60
+unk : 32;                       // _64
+
+right bumper pos is display_width - textbox_rightbound_offset
+
+goals:
+display_width 0x00000140 -> 0x000001BC
+slider_display_width 0x00000028 -> 0x000000A4
+slider_actionable_width 0x0000000F -> 0x0000008B
+
+original math happens at: 03ACB4FF
+
+03ACBAE0 | 8B55 FC             | mov edx,dword ptr ss:[ebp-4]                                             |
+03ACBAE3 | 8B4D F4             | mov ecx,dword ptr ss:[ebp-C]                                             |
+03ACBAE6 | 83C1 14             | add ecx,14                                                               | slider_display_width = EAX
+03ACBAE9 | 894A 48             | mov dword ptr ds:[edx+48],ecx                                            |
+03ACBAEC | 8B5A 4C             | mov ebx,dword ptr ds:[edx+4C]                                            | ebx:&L"=::=::\\"
+03ACBAEF | 8B42 1C             | mov eax,dword ptr ds:[edx+1C]                                            |
+03ACBAF2 | 29D8                | sub eax,ebx                                                              | slider_actionable_width = EAX
+03ACBAF4 | 29C8                | sub eax,ecx                                                              |
+03ACBAF6 | 8942 50             | mov dword ptr ds:[edx+50],eax                                            |
+03ACBAF9 | 8B5A 54             | mov ebx,dword ptr ds:[edx+54]                                            | ebx:&L"=::=::\\"
+03ACBAFC | 8D4C1B 05           | lea ecx,dword ptr ds:[ebx+ebx+5]                                         |
+03ACBB00 | 29C8                | sub eax,ecx                                                              |
+03ACBB02 | 8942 58             | mov dword ptr ds:[edx+58],eax                                            |
+03ACBB05 | 8B42 48             | mov eax,dword ptr ds:[edx+48]                                            |
+03ACBB08 | 8D4C18 03           | lea ecx,dword ptr ds:[eax+ebx+3]                                         |
+03ACBB0C | 894A 5C             | mov dword ptr ds:[edx+5C],ecx                                            |
+03ACBB0F | E9 B0FBFFFF         | jmp plugatxserver.3ACB6C4                                                |
+
+
+EAX slider_display_width  XXXXX slider actionable width
+EBX bumper display width
+ECX slider display x  XXXXX bumper display width * 2
+
+
+CoreNode::CoreNode   01   "SE Constants"
+CoreNode::CoreNode   02   "CoreNode"
+CoreNode::CoreNode   03   "SE Constant"
+CoreNode::CoreNode   04   "CoreNode"
+CoreNode::CoreNode   05   "file"
+CoreNode::CoreNode   06   "CoreNode"
+CoreNode::CoreNode   07   "<Node>"
+CoreNode::CoreNode   08   "CoreNode"
+CoreNode::CoreNode   09   "<Node>"
+CoreNode::CoreNode   10   "CoreNode"
+CoreNode::CoreNode   11   "SE::Parms1"
+CoreNode::CoreNode   12   "CoreNode"
+CoreNode::CoreNode   13   "<Node>"  has the width! (at +4C)  and is the virtual caller! (at 03ACC9FB)
+CoreNode::CoreNode   14   "CoreNode"
+CoreNode::CoreNode   15   "<Node>"
+CoreNode::CoreNode   16   "CoreNode"
+CoreNode::CoreNode   17   "<Node>"
+CoreNode::CoreNode   18   "CoreNode"
+CoreNode::CoreNode   19   "<Node>"
+CoreNode::CoreNode   20   "UIFrame"
+CoreNode::CoreNode   21   "UIFrame"
+CoreNode::CoreNode   22   "treeviewleaf"
+CoreNode::CoreNode   23   "UIFrame"
+CoreNode::CoreNode   24   "UIFrame"
+CoreNode::CoreNode   25   "treeviewleaf"
+CoreNode::CoreNode   26   "treeviewleaf"
+CoreNode::CoreNode   27   "CoreNode"
+CoreNode::CoreNode   28   "treeviewleaf"
+CoreNode::CoreNode   29   "CoreNode"
+CoreNode::CoreNode   30   "treeviewleaf"
+CoreNode::CoreNode   31   "CoreNode"
+CoreNode::CoreNode   32   "Load"
+CoreNode::CoreNode   33   "Save"
+CoreNode::CoreNode   34   "treeviewleaf"
+CoreNode::CoreNode   35   "CoreNode"
+CoreNode::CoreNode   36   "Level Sound Distance"
+CoreNode::CoreNode   37   "Boss BGM start distance"
+CoreNode::CoreNode   38   "Boss BGM end distance"
+
+
+
+
+hardcoded 168??? Pog
+03AC7F11 | C740 1C 68010000         | mov dword ptr ds:[eax+1C],168   
+
+Overwritten here by parent or such?
+09ACB415 | 8B45 FC                  | mov eax,dword ptr ss:[ebp-4]                                                                                      |
+09ACB418 | 8B4D 10                  | mov ecx,dword ptr ss:[ebp+10]                                                                                     |
+09ACB41B | 8B51 4C                  | mov edx,dword ptr ds:[ecx+4C]                                                                                     |
+09ACB41E | 8950 1C                  | mov dword ptr ds:[eax+1C],edx                                                                                     |
+
+Parent: +4C member initialized to 0
+03AD175A | C741 30 00000000         | mov dword ptr ds:[ecx+30],0                                                                                       |
+
+Parent: +4c member gets overwritten (by 3??)
+03AC3FA6 | 8B55 0C                  | mov edx,dword ptr ss:[ebp+C]                                                                                      |
+03AC3FA9 | 8951 30                  | mov dword ptr ds:[ecx+30],edx                                                                                     |
+
+
+
+New day.
+
+
+Parent's +4c is set here with return of call: (parent is 13 "<Node>", see above)
+03ACC9FB | FF12                     | call dword ptr ds:[edx]                                                                                           |
+03ACC9FD | 3BF4                     | cmp esi,esp                                                                                                       |
+03ACC9FF | E8 FC940000              | call <JMP.&_chkesp>                                                                                               |
+03ACCA04 | 8B4D F0                  | mov ecx,dword ptr ss:[ebp-10]                                                                                     |
+03ACCA07 | 8941 4C                  | mov dword ptr ds:[ecx+4C],eax                                                                                     |
+
+Oh no. This is what's being called. This is a TCPStream.
+.text:100010B4 syscore.dll:$10B4 #10B4 <public: virtual int __thiscall Stream::readInt(void)>
+
+
+
+
+Giving up for now...
+
+
+
+String padding
+
+strlen is multiplied by 0x0B (11). This value is fixed in memory, updated a lot somewhere else (mem breakpoint to find out):
+03ACB434 | E8 D9AA0000              | call <JMP.&strlen>                                                                                                |
+03ACB439 | 83C4 04                  | add esp,4                                                                                                         |
+03ACB43C | 8B0D B0C7AE03            | mov ecx,dword ptr ds:[3AEC7B0]                                                                                    |
+03ACB442 | 0FAFC8                   | imul ecx,eax                                                                                                      |
+03ACB445 | 894D F8                  | mov dword ptr ss:[ebp-8],ecx                                                                                      |
+
+
+Spawning a new window makes this line execute twice, overwrites [3AEC7B0] with 0x0B (11)
+03AD41BB | 68 B0C7AE03              | push plugatxserver.3AEC7B0                                                                                        |
+03AD41C0 | 6A 01                    | push 1                                                                                                            |
+03AD41C2 | 68 68A7AE03              | push plugatxserver.3AEA768                                                                                        |
+03AD41C7 | 8B4D F8                  | mov ecx,dword ptr ss:[ebp-8]                                                                                      | ecx:NewObject+2B4EF
+03AD41CA | 51                       | push ecx                                                                                                          | ecx:NewObject+2B4EF
+03AD41CB | FF15 F0D3AE03            | call dword ptr ds:[<GetTextExtentPoint32A>]                                                                       |                                                                   |
+
+Holy fuck, it's literally
+GetTextExtentPoint32A(hdc, "W", 1, psizl)
+that stores the width elsewhere... come on now.
+
+
+BOOL GetTextExtentPoint32A(
+  [in]  HDC    hdc,
+  [in]  LPCSTR lpString,
+  [in]  int    c,
+  [out] LPSIZE psizl
+);
+
+HDC GetDC(
+  [in] HWND hWnd
+);
+
+[in] hWnd
+
+A handle to the window whose DC is to be retrieved. If this value is NULL, GetDC retrieves the DC for the entire screen.
+
+GetDC: call dword ptr ds:[0x03AED500]
+
+
+UIWindow->0x0064 is hWnd
+
+Side tangent:
+
+Right pane width is found here!!!!:
+03AC734C | 6A 00                    | push 0                                                                                |
+03AC734E | 6A 00                    | push 0                                                                                |
+03AC7350 | 68 F4010000              | push 1F4                                                                              |  // This value (0x230 is a perfect replacement)
+03AC7355 | 8B4D EC                  | mov ecx,dword ptr ss:[ebp-14]                                                         |
+03AC7358 | FF15 10D6AE03            | call dword ptr ds:[<public: void __thiscall UIWindow::sizeWindow(int, int, int)>]     |
+
+
+
+mov dword ptr ds:[0x03AEC7B4], ecx
+
+mov ecx, dword ptr ds:[0x03AEC7B0]
+
+My patch:
+03ACB540 | 68 B0C7AE03              | push plugatxserver.3AEC7B0                                                                                            |
+03ACB545 | 50                       | push eax                                                                                                              |
+03ACB546 | 8B4D 10                  | mov ecx,dword ptr ss:[ebp+10]                                                                                         |
+03ACB549 | 8B41 04                  | mov eax,dword ptr ds:[ecx+4]                                                                                          |
+03ACB54C | 50                       | push eax                                                                                                              |
+03ACB54D | 6A 00                    | push 0                                                                                                                |
+03ACB54F | FF15 00D5AE03            | call dword ptr ds:[<GetDC>]                                                                                           |
+03ACB555 | 50                       | push eax                                                                                                              |
+03ACB556 | FF15 F0D3AE03            | call dword ptr ds:[<GetTextExtentPoint32A>]                                                                           |
+03ACB55C | B8 0D000000              | mov eax,D                                                                                                             |
+03ACB561 | A3 B4C7AE03              | mov dword ptr ds:[3AEC7B4],eax                                                                                        |
+03ACB566 | 8B0D B0C7AE03            | mov ecx,dword ptr ds:[3AEC7B0]                                                                                        |
+03ACB56C | E9 D4FEFFFF              | jmp plugatxserver.3ACB445                                                                                             |
+
+
+
+
+
+
+12-29-2024 notes
+NOP [03AD41DA, 03AD41F1) to remove second SelectObject... might keep the default font intact?
+
+
+FF 15 04 D5 AE 03
+
+
+CoreNode::CoreNode   0031EB38 00000000 00000000 0031EE78   "SE Constants"
+CoreNode::CoreNode   0031EB6C 00000000 00000000 00000000   "CoreNode"
+CoreNode::CoreNode   0031EE78 0031EB38 00000000 00000000   "SE Constant"
+CoreNode::CoreNode   0031EEAC 00000000 00000000 0031EEC8   "CoreNode"
+CoreNode::CoreNode   0031EEC8 0031EEAC 0031F0B0 0031EF28   "file"
+CoreNode::CoreNode   0031EEFC 00000000 00000000 00000000   "CoreNode"
+CoreNode::CoreNode   0031EF28 0031EEC8 0031EFE8 00000000      "<Node>"
+CoreNode::CoreNode   0031EF5C 00000000 00000000 00000000      "CoreNode"
+CoreNode::CoreNode   0031EFE8 0031EEC8 00000000 00000000      "<Node>"
+CoreNode::CoreNode   0031F01C 00000000 00000000 00000000      "CoreNode"
+CoreNode::CoreNode   0031F0B0 0031EEAC 00000000 0031F100      "SE::Parms1"
+CoreNode::CoreNode   0031F0E4 00000000 00000000 00000000      "CoreNode"
+CoreNode::CoreNode   0031F100 0031F0B0 0031F1C0 00000000      "<Node>"  has the width! (at +4C)  and is the virtual caller! (at 03ACC9FB)
+CoreNode::CoreNode   0031F134 00000000 00000000 00000000      "CoreNode"
+CoreNode::CoreNode   0031F1C0 0031F0B0 0031F280 00000000      "<Node>"
+CoreNode::CoreNode   0031F1F4 00000000 00000000 00000000      "CoreNode"
+CoreNode::CoreNode   0031F280 0031F0B0 00000000 00000000      "<Node>"
+CoreNode::CoreNode   0031F2B4 00000000 00000000 00000000      "CoreNode"
+CoreNode::CoreNode   0031EC00 00000000 00000000 00000000      "<Node>"
+CoreNode::CoreNode   0031ED90 036A1F00 00000000 0031F358      "UIFrame"
+CoreNode::CoreNode   0031F358 0031ED90 0031F510 00000000      "UIFrame"
+CoreNode::CoreNode   0031EC40 00000000 00000000 0031F830      "treeviewleaf"
+CoreNode::CoreNode   0031F510 0031ED90 0031F5C0 00000000      "UIFrame"
+CoreNode::CoreNode   0031F5C0 0031ED90 00000000 00000000      "UIFrame"
+CoreNode::CoreNode   0031F778 00000000 00000000 0031EAA8      "treeviewleaf"
+CoreNode::CoreNode   0031EAA8 0031F778 00000000 00000000      "treeviewleaf"
+CoreNode::CoreNode   0031EAE8 00000000 00000000 00000000      "CoreNode"
+CoreNode::CoreNode   0031F7B8 00000000 00000000 0031F830      "treeviewleaf"
+CoreNode::CoreNode   0031F7F8 00000000 00000000 00000000      "CoreNode"
+CoreNode::CoreNode   0031F830 0031F7B8 0031F8E0 00000000      "treeviewleaf"
+CoreNode::CoreNode   0031F870 00000000 00000000 002DFCB0      "CoreNode"
+CoreNode::CoreNode   002DFCB0 0031F870 0031F8A8 00000000      "Load"
+CoreNode::CoreNode   0031F8A8 0031F870 00000000 00000000      "Save"
+CoreNode::CoreNode   0031F8E0 0031F7B8 00000000 00000000      "treeviewleaf"
+CoreNode::CoreNode   0031F920 00000000 00000000 0031F958      "CoreNode"
+CoreNode::CoreNode   0031F958 0031F920 0031F9C0 00000000      "Level Sound Distance"
+CoreNode::CoreNode   0031F9C0 0031F920 0031FA28 00000000      "Boss BGM start distance"
+CoreNode::CoreNode   0031FA28 0031F920 00000000 00000000      "Boss BGM end distance"
