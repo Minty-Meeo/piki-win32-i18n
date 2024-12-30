@@ -33,8 +33,6 @@ def main(args: collections.abc.Sequence[str]):
     i18n_blob = bytearray()
     cursor = BASE_ADDR + I18N_ADDR
 
-    replaced_ranges = list()
-
     for row in csvfile:
         if len(row) < 2:
             continue
@@ -46,22 +44,18 @@ def main(args: collections.abc.Sequence[str]):
             if verbose: print(f"Message \"{old}\" was not found!")
             continue
 
-        for old_location in old_locations:
-            if xrefs := pe.xref(old_location):
-                if len(xrefs) != 1:
-                    if verbose: print(f"Message \"{old}\" at 0x{old_location:x} ({binascii.hexlify(old_sjis)}) was xref'd in {len(xrefs)} places: {xrefs}")
-                for address in xrefs:
-                    pe.patch_address(BASE_ADDR + address, tuple(struct.pack("<I", cursor)))
-            else:
-                if not address_in_replaced_ranges(replaced_ranges, old_location):
-                    if verbose: print(f"Message \"{old}\" at 0x{old_location:x} ({binascii.hexlify(old_sjis)}) is not xref'd")
-                continue
+        if not (search_results := [(old_location, xrefs) for old_location in old_locations if (xrefs := pe.xref(old_location))]):
+            if verbose: print(f"Message \"{old}\" at 0x{old_location:x} ({binascii.hexlify(old_sjis)}) is not xref'd")
+            continue
 
-            i18n_blob += new_sjis
-            cursor += len(new_sjis)
+        for old_location, xrefs in search_results:
+            if len(xrefs) != 1:
+                if verbose: print(f"Message \"{old}\" at 0x{old_location:x} ({binascii.hexlify(old_sjis)}) was xref'd in {len(xrefs)} places: {xrefs}")
+            for address in xrefs:
+                pe.patch_address(BASE_ADDR + address, tuple(struct.pack("<I", cursor)))
 
-        # LIEF does not immediately overwrite the data at these locations (why?), so for verbose output these pending writes must be tracked.
-        if verbose: replaced_ranges.extend([(old_location, len(old_sjis)) for old_location in old_locations])
+        i18n_blob += new_sjis
+        cursor += len(new_sjis)
 
     i18n = lief.PE.Section(".i18n")
     i18n.content = i18n_blob

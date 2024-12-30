@@ -1,10 +1,3 @@
-"黄ペレット","yellow pellet","GenObjectBoss menu"
-"赤ペレット","red pellet",
-"青ペレット","blue pellet",
-"２０ペレット","20 pellet",
-"１０ペレット","10 pellet",
-"５ペレット","5 pellet",
-"１ペレット","1 pellet",
 "SE Constatns","SE Constants","GameFlow"
 "ペレットマネージャ","pelletMgr",
 "仕事オブジェマネージャ","workObjectMgr",
@@ -32,3 +25,10 @@
 "アタック","attack",
 "解散","dismiss",
 "メニュー","menu",
+"黄ペレット","yellow pellet","GenObjectBoss menu"
+"赤ペレット","red pellet",
+"青ペレット","blue pellet",
+"２０ペレット","20 pellet",
+"１０ペレット","10 pellet",
+"５ペレット","5 pellet",
+"１ペレット","1 pellet",
