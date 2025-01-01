@@ -99,6 +99,7 @@ CoreNode::CoreNode(char*) constructor is *very* easy to breakpoint.
 node's name is the message shown by the slider (convenient!) "Level Sound Distance"
 09ACB504 writes actionable slider width
 
+Age Menu Slider
 // _00 = VTBL
 char* mName;        // _04
 CoreNode* mParent;  // _08
@@ -362,3 +363,46 @@ CoreNode::CoreNode   0031F920 00000000 00000000 0031F958      "CoreNode"
 CoreNode::CoreNode   0031F958 0031F920 0031F9C0 00000000      "Level Sound Distance"
 CoreNode::CoreNode   0031F9C0 0031F920 0031FA28 00000000      "Boss BGM start distance"
 CoreNode::CoreNode   0031FA28 0031F920 00000000 00000000      "Boss BGM end distance"
+
+
+
+12-30-2024
+
+combo boxes have a similar padding issue.
+
+03ACDB4A | 8B4D FC             | mov ecx,dword ptr ss:[ebp-4]                                             |
+03ACDB4D | FF15 68D6AE03       | call dword ptr ds:[<public: char * __thiscall CoreNode::Name(void)>]     |
+03ACDB53 | 3BFC                | cmp edi,esp                                                              |
+03ACDB55 | E8 A6830000         | call <JMP.&_chkesp>                                                      |
+03ACDB5A | 50                  | push eax                                                                 |
+03ACDB5B | 8B55 08             | mov edx,dword ptr ss:[ebp+8]                                             |
+03ACDB5E | 52                  | push edx                                                                 |
+03ACDB5F | FF15 F0D3AE03       | call dword ptr ds:[<GetTextExtentPoint32A>]                              |
+03ACDB65 | 3BF4                | cmp esi,esp                                                              |
+03ACDB67 | E8 94830000         | call <JMP.&_chkesp>                                                      |
+
+
+
+Age Menu Combo Box
+// _00 = VTBL
+char* mName;        // _04
+CoreNode* mParent;  // _08
+CoreNode* mNext;    // _0C
+CoreNode* mChild;   // _10
+int display_x;      // _14
+int display_y;      // _18
+int display_width;  // _1C
+int display_height; // _20
+unk : 32;           // _24
+unk* ;              // _28
+unk* ;              // _2C
+unk* ;              // _30
+unk : 32;           // _34
+unk : 32;           // _38
+unk : 32;           // _3C
+unk : 32;           // _40
+unk : 32;           // _44
+unk* ;              // _48
+int combo_display_x;// _4C  // Assumedly `psizl.cx of "W" * strlen`
+unk : 32;           // _50
+unk : 32;           // _54

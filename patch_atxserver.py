@@ -17,6 +17,11 @@ def main(args: collections.abc.Sequence[str]):
     with open("./asm/MenuSliderAdjust.bin", "rb") as f:
         pe.patch_address(BASE_ADDR + 0xBAE0, tuple(f.read()))
     
+    # Overwrite `_chkesp` call after `GetTextExtentPoint32A` call.
+    pe.patch_address(BASE_ADDR + 0xDB67, tuple(b'\xE8\x14\x02\x00\x00'))  # call +0x214  ; To where ComboBoxAdjust routine is stored
+    with open("./asm/ComboBoxAdjust.bin", "rb") as f:
+        pe.patch_address(BASE_ADDR + 0xDD80, tuple(f.read()))
+    
     pe.write("./files/plugins/plugAtxServer.dll")
 #
 

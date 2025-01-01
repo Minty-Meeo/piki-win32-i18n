@@ -1,5 +1,5 @@
 .intel_syntax noprefix
-mov edx, dword ptr ss:[ebp-0x04]  # EDX - CoreNode ptr from stack
+mov edx, dword ptr ss:[ebp-0x04]  # EDX = CoreNode ptr from stack
 mov ecx, dword ptr ss:[ebp-0x0C]  # ECX = psizl.cx from stack
 add ecx, 20                       # Add +10 padding to left and right
 mov dword ptr ds:[edx+0x48], ecx  # slider_display_x = ECX
