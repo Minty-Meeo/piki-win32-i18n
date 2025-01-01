@@ -51,3 +51,6 @@
 "爆弾方式","Bomb method",
 "すべり弱","Weak slip",
 "すべり強","Strong slip",
+"先頭オフセット","Initial offset","C-Unit"
+"長さリミット","Length limit",
+"ポジションの大きさ(最大)","Position size (max)",
