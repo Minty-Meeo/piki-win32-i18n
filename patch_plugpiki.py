@@ -1,6 +1,7 @@
 import binascii
 import collections
 import csv
+import glob
 import itertools
 import lief
 import os
@@ -31,7 +32,7 @@ def section_search(section: lief.Section, data: bytes, location: int = 0):
 def main(args: collections.abc.Sequence[str]):
     verbose = "-v" in args or "--verbose" in args
 
-    filepaths = [os.path.join(LANGUAGE, filename) for filename in os.listdir(LANGUAGE)]
+    filepaths = [filename for filename in glob.glob(os.path.join(LANGUAGE, "*.csv"))]
     filepaths.sort()  # Filepaths are sorted for determinism.
     rows = accumulate_csvs(filepaths)
 
