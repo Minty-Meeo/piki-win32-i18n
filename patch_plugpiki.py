@@ -1,12 +1,24 @@
 import binascii
 import collections
 import csv
+import itertools
 import lief
+import os
 import struct
 import sys
 
+LANGUAGE = "eng"
 BASE_ADDR = 0x10000000
 I18N_ADDR = 0x004ea000
+
+def accumulate_csvs(filepaths: list[str]):
+    rows = list()
+    for filepath in filepaths:
+        for row in csv.reader(open(filepath)):
+            # Most software refuses to write jagged CSV files, so trailing empty cells must be removed.
+            rows.append([cell for cell in row if cell])
+    return rows
+#
 
 def section_search(section: lief.Section, data: bytes, location: int = 0):
     locations = list()
@@ -16,46 +28,51 @@ def section_search(section: lief.Section, data: bytes, location: int = 0):
     return locations
 #
 
-def address_in_replaced_ranges(replaced_ranges: list, address: int):
-    for virtual_address, size in replaced_ranges:
-        if address >= virtual_address and address < virtual_address + size:
-            return True
-    return False
-#
-
 def main(args: collections.abc.Sequence[str]):
     verbose = "-v" in args or "--verbose" in args
 
+    filepaths = [os.path.join(LANGUAGE, filename) for filename in os.listdir(LANGUAGE)]
+    filepaths.sort()  # Filepaths are sorted for determinism.
+    rows = accumulate_csvs(filepaths)
+
     pe = lief.PE.parse("./plugins/plugPiki.dll")
-    csvfile = csv.reader(open("./JPN to ENG.csv"))
-    
     rdata = pe.get_section(".rdata")
     i18n_blob = bytearray()
     cursor = BASE_ADDR + I18N_ADDR
 
-    for row in csvfile:
-        if len(row) < 2:
+    for row in rows:
+        if len(row) < 1:
+            print(f"WARNING: There was an empty row in a file!")
             continue
-        
-        old = row[0]; old_sjis = old.encode("sjis") + b'\0'
-        new = row[1]; new_sjis = new.encode("sjis") + b'\0'
+
+        if len(row) < 2:
+            continue  # Stops placeholder rows without translations from cluttering the log with errors
+
+        old_msg = row[0]; old_sjis = old_msg.encode("sjis") + b'\0'
 
         if not (old_locations := section_search(rdata, old_sjis)):
-            if verbose: print(f"Message \"{old}\" was not found!")
+            print(f"WARNING: Message \"{old_msg}\" ({binascii.hexlify(old_sjis)}) was not found!")
             continue
 
-        if not (search_results := [(old_location, xrefs) for old_location in old_locations if (xrefs := pe.xref(old_location))]):
-            if verbose: print(f"Message \"{old}\" at 0x{old_location:x} ({binascii.hexlify(old_sjis)}) is not xref'd")
+        if len(old_locations) > 1:
+            if verbose: print(f"INFO: Message \"{old_msg}\" ({binascii.hexlify(old_sjis)}) was found at multiple locations! {old_locations}")
+
+        if not (xrefs := [xref for old_location in old_locations if (xref := pe.xref(old_location))]):
+            print(f"WARNING: No xrefs for any copy(s) of the message \"{old_msg}\" ({binascii.hexlify(old_sjis)}) were found! {old_locations}")
             continue
 
-        for old_location, xrefs in search_results:
-            if len(xrefs) != 1:
-                if verbose: print(f"Message \"{old}\" at 0x{old_location:x} ({binascii.hexlify(old_sjis)}) was xref'd in {len(xrefs)} places: {xrefs}")
-            for address in xrefs:
-                pe.patch_address(BASE_ADDR + address, tuple(struct.pack("<I", cursor)))
+        xrefs_chain = list(itertools.chain.from_iterable(xrefs))
+        translations = row[1:]
 
-        i18n_blob += new_sjis
-        cursor += len(new_sjis)
+        if len(xrefs_chain) != len(translations):
+            print(f"ERROR: \"{old_msg}\" requires {len(xrefs_chain)} translations, but {len(translations)} were given!")
+            continue
+        
+        for address, new_msg in zip(xrefs_chain, translations):
+            new_sjis = new_msg.encode("sjis") + b'\0'
+            pe.patch_address(BASE_ADDR + address, tuple(struct.pack("<I", cursor)))
+            i18n_blob += new_sjis
+            cursor += len(new_sjis)
 
     i18n = lief.PE.Section(".i18n")
     i18n.content = i18n_blob

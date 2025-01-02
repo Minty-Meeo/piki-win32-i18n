@@ -1,0 +1,8 @@
+"ペレット","Pellet<TODO 1>","pellet<TODO 2>","pellet<TODO 3>"
+"シェイプ管理","shapeMgr",,
+"ジョイント","joint",,
+"なし","none",,
+"常駐","Permanently loaded",,
+"あればロード","Load if available",,
+"TEKI 次第でロード","Load depending on TEKI",,
+"BOSS 次第でロード","Load depending on BOSS",,
