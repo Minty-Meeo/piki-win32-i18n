@@ -1,10 +1,10 @@
-"壁食いポイントの大きさ"
-"壁食いダメージ"
-"空中に逃げる時のライフのパーセンテージ"
-"地上に降りる時のライフのパーセンテージ"
-"滞空中のｙ軸方向の速度"
-"離陸する時のｙ軸方向の速度"
-"潜るまでの時間（秒）"
-"スリープ時間（秒）"
-"ピキ攻撃判定サイズ"
-"ナビ攻撃判定サイズ"
+"壁食いポイントの大きさ","Wall-eating point size","Wall-eating point size","Wall-eating point size"
+"壁食いダメージ","Wall-eating damage","Wall-eating damage","Wall-eating damage"
+"空中に逃げる時のライフのパーセンテージ","Percentage of life to escape into the air",,
+"地上に降りる時のライフのパーセンテージ","Percentage of life to land on the ground",,
+"滞空中のｙ軸方向の速度","Y-axis speed while airborne",,
+"離陸する時のｙ軸方向の速度","Y-axis speed during takeoff",,
+"潜るまでの時間（秒）","Time to dive (seconds)","Time to dive (seconds)","Time to dive (seconds)"
+"スリープ時間（秒）","Sleep time (seconds)","Sleep time (seconds)","Sleep time (seconds)"
+"ピキ攻撃判定サイズ","Piki attack judgement size","Piki attack judgement size",
+"ナビ攻撃判定サイズ","Navi attack judgement size","Navi attack judgement size",
