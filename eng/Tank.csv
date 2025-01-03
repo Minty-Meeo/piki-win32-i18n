@@ -1,4 +1,4 @@
-"炎攻撃時離れる距離"
-"炎攻撃のアニメ速度"
-"後退り速度"
-"パトロールタイムアウト"
+"炎攻撃時離れる距離","Distance to retreat during fire attack"
+"炎攻撃のアニメ速度","Fire attack animation speed"
+"後退り速度","Retreat speed"
+"パトロールタイムアウト","Patrol timeout"
