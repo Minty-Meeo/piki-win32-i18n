@@ -42,6 +42,9 @@ def main(args: collections.abc.Sequence[str]):
     pe.patch_address(BASE_ADDR + 0xa500d, tuple(b'\x90' * 5))
     pe.patch_address(BASE_ADDR + 0xa5110, tuple(b'\x90' * 5))
 
+    # Disable "TekiPersonality::read:too old version:%d" panic modal that prevents GenObjectTeki version 7 from working.
+    pe.patch_address(BASE_ADDR + 0x885cf, tuple(b'\x90' * 5))
+
     rdata = pe.get_section(".rdata")
     i18n_blob = bytearray()
     cursor = BASE_ADDR + I18N_ADDR
