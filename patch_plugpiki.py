@@ -46,9 +46,6 @@ def main(args: collections.abc.Sequence[str]):
             print(f"WARNING: There was an empty row in a file!")
             continue
 
-        if len(row) < 2:
-            continue  # Stops placeholder rows without translations from cluttering the log with errors
-
         old_msg = row[0]; old_sjis = old_msg.encode("sjis") + b'\0'
 
         if not (old_locations := section_search(rdata, old_sjis)):
@@ -61,6 +58,9 @@ def main(args: collections.abc.Sequence[str]):
         if not (xrefs := [xref for old_location in old_locations if (xref := pe.xref(old_location))]):
             print(f"WARNING: No xrefs for any copy(s) of the message \"{old_msg}\" ({binascii.hexlify(old_sjis)}) were found! {old_locations}")
             continue
+
+        if len(row) < 2:
+            continue  # Stops placeholder rows without translations from cluttering the log with errors
 
         xrefs_chain = list(itertools.chain.from_iterable(xrefs))
         translations = row[1:]
