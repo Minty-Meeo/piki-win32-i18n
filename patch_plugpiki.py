@@ -37,6 +37,11 @@ def main(args: collections.abc.Sequence[str]):
     rows = accumulate_csvs(filepaths)
 
     pe = lief.PE.parse("./plugins/plugPiki.dll")
+
+    # Disable "cursor nuki!" panic modal that prevents the pluckaphone from working.
+    pe.patch_address(BASE_ADDR + 0xa500d, tuple(b'\x90' * 5))
+    pe.patch_address(BASE_ADDR + 0xa5110, tuple(b'\x90' * 5))
+
     rdata = pe.get_section(".rdata")
     i18n_blob = bytearray()
     cursor = BASE_ADDR + I18N_ADDR
