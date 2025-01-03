@@ -66,7 +66,7 @@ def main(args: collections.abc.Sequence[str]):
         translations = row[1:]
 
         if len(xrefs_chain) != len(translations):
-            print(f"ERROR: \"{old_msg}\" requires {len(xrefs_chain)} translations, but {len(translations)} were given!")
+            print(f"ERROR: \"{old_msg}\" ({binascii.hexlify(old_sjis)}) requires {len(xrefs_chain)} translations, but {len(translations)} were given!")
             continue
         
         for address, new_msg in zip(xrefs_chain, translations):
