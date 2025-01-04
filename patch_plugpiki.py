@@ -45,6 +45,9 @@ def main(args: collections.abc.Sequence[str]):
     # Disable "TekiPersonality::read:too old version:%d" panic modal that prevents GenObjectTeki version 7 from working.
     pe.patch_address(BASE_ADDR + 0x885cf, tuple(b'\x90' * 5))
 
+    # Disable world freeze when `Controller::keyClick(0x4000) == true` (spacebar).
+    pe.patch_address(BASE_ADDR + 0xb4860, tuple(b'\x31\xC0\x90'))  # xor eax, eax; nop
+
     rdata = pe.get_section(".rdata")
     i18n_blob = bytearray()
     cursor = BASE_ADDR + I18N_ADDR
