@@ -1,0 +1,4 @@
+"collision debug",
+"ピキの攻撃力を０にする","set piki attack power to 0"
+"ピキを次の面にもちこさない","do not carry piki to the next stage"
+"ペレットデバッグ","pellet debug"
