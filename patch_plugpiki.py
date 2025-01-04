@@ -51,6 +51,15 @@ def main(args: collections.abc.Sequence[str]):
     # Allocate ogRader resources on heap -1 instead of Movie heap to avoid running out of memory.  It running out of memory is an oversight caused by preloadLanguage() being skipped in this version.
     pe.patch_address(BASE_ADDR + 0x22ea8, tuple(b'\x6A\xFF'))  # push -1
 
+    # Set displayPikiCount and onionsDiscovered bitfield to all ones, unlocking all Pikmin and Onions
+    pe.patch_address(BASE_ADDR + 0x9abcf, tuple(b'\xc6\x81\xac\x01\x00\x00\xff'))  # displayPikiCount  # mov byte ptr [ecx + 0x1ac], 0xff
+    pe.patch_address(BASE_ADDR + 0x9ac20, tuple(b'\xc6\x80\x84\x01\x00\x00\xff'))  # onionsDiscovered  # mov byte ptr [eax + 0x184], 0xff
+    pe.patch_address(BASE_ADDR + 0x9ac27, tuple(b'\x90' * 20))                     # Stub the call sites of the functions that would normally set the bitfields.
+    # The values are initialized in two places for redundancy, so change both.
+    pe.patch_address(BASE_ADDR + 0x9ae36, tuple(b'\xc6\x81\xac\x01\x00\x00\xff'))  # displayPikiCount  # mov byte ptr [ecx + 0x1ac], 0xff
+    pe.patch_address(BASE_ADDR + 0x9aef4, tuple(b'\xc6\x80\x84\x01\x00\x00\xff'))  # onionsDiscovered  # mov byte ptr [eax + 0x184], 0xff
+    pe.patch_address(BASE_ADDR + 0x9aefb, tuple(b'\x90' * 20))                     # Stub the call sites of the functions that would normally set the bitfields.
+
     rdata = pe.get_section(".rdata")
     i18n_blob = bytearray()
     cursor = BASE_ADDR + I18N_ADDR
