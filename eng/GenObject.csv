@@ -4,7 +4,7 @@
 "ペレットをうむ","birth PELLET<TODO 1>","birth PELLET<TODO 2>"
 "仕事オブジェクトを発生","Generate WORK OBJECT",
 "Generate PLANT",,
-"マップパーツを発生","Generate MAP PART",
+"マップパーツを発生","Generate MAP PARTS",
 "敵を発生","Generate TEKI",
 "ボスを発生","Generate BOSS",
 "create MAP OBJECT",,
