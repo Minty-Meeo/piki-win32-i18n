@@ -48,6 +48,9 @@ def main(args: collections.abc.Sequence[str]):
     # Disable world freeze when `Controller::keyClick(0x4000) == true` (spacebar).
     pe.patch_address(BASE_ADDR + 0xb4860, tuple(b'\x31\xC0\x90'))  # xor eax, eax; nop
 
+    # Allocate ogRader resources on heap -1 instead of Movie heap to avoid running out of memory.  It running out of memory is an oversight caused by preloadLanguage() being skipped in this version.
+    pe.patch_address(BASE_ADDR + 0x22ea8, tuple(b'\x6A\xFF'))  # push -1
+
     rdata = pe.get_section(".rdata")
     i18n_blob = bytearray()
     cursor = BASE_ADDR + I18N_ADDR
