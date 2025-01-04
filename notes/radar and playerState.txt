@@ -1,0 +1,66 @@
+Forest of Hope:
+
+100672BA | E8 BC9FF9FF         | call <syscore.public: void * __thiscall AyuStack::push(int)>             |
+EAX = 0x00011020 = 69664
+EAX = 0x00088000 = 557056
+new[] 557056 failed in heap 'movie'
+
+Movie heap is 0x40000 large in both plugPiki and GCN.  What gives?
+These massive allocations aren't seen on GCN.  What gives?
+
+("screen/eng_tex/ya_l.bti", true)
+("screen/eng_tex/ya_u.bti", true)
+"screen/eng_tex/black_32.bti"
+"screen/eng_tex/map1_i4.bti"
+0908E4C6 | FF15 444B3609       | call dword ptr ds:[<public: class Texture * __thiscall StdSystem::loadTexture(char *, bool)>]   |
+
+
+
+
+
+
+
+PlayerState
+
+Something is constructed here, it has a pointer to PlayerState in it.
+08EC8137 | 68 68030000         | push 368                                                                                        |
+08EC813C | E8 DD8EFDFF         | call plugpiki.8EA101E                                                                           |
+08EC8141 | 83C4 04             | add esp,4                                                                                       |
+08EC8144 | 8945 C4             | mov dword ptr ss:[ebp-3C],eax                                                                   |
+08EC8147 | C745 FC 03000000    | mov dword ptr ss:[ebp-4],3                                                                      |
+08EC814E | 837D C4 00          | cmp dword ptr ss:[ebp-3C],0                                                                     |
+08EC8152 | 74 0D               | je plugpiki.8EC8161                                                                             |
+08EC8154 | 8B4D C4             | mov ecx,dword ptr ss:[ebp-3C]                                                                   |
+08EC8157 | E8 A4271A00         | call plugpiki.906A900                                                                           |
+
+
+
+PlayerState at 0x089A0CB8
+						at 0x089A0CB8
+Lucky, it doesn't move despite being heap-allocated!
+
+Initialize displayPikiCount(?) bitfield to 0
+08F3ABCF | C681 AC010000 00    | mov byte ptr ds:[ecx+1AC],0                                                                     |
+Initialize Piki unlock bitfield to 0
+08F3AC20 | C680 84010000 00    | mov byte ptr ds:[eax+184],0                                                                     |
+
+displayPikiCount here too
+08F3AE36 | C681 AC010000 00    | mov byte ptr ds:[ecx+1AC],0                                                                     |
+Piki unlock here too  
+08F3AEF4 | C680 84010000 00    | mov byte ptr ds:[eax+184],0                                                                     |
+
+Call PlayerState::setPikiDisplayCount(int)... and whatever the one is to unlock the Onion
+08F3AEFB | 6A 01               | push 1                                                                                          |
+08F3AEFD | 8B4D F0             | mov ecx,dword ptr ss:[ebp-10]                                                                   |
+08F3AF00 | E8 9B390000         | call plugpiki.8F3E8A0                                                                           |
+08F3AF05 | 6A 01               | push 1                                                                                          |
+08F3AF07 | 8B4D F0             | mov ecx,dword ptr ss:[ebp-10]                                                                   |
+08F3AF0A | E8 91140000         | call plugpiki.8F3C3A0                                                                           |
+
+In two places?
+08F3AC27 | 6A 01               | push 1                                                                                          |
+08F3AC29 | 8B4D FC             | mov ecx,dword ptr ss:[ebp-4]                                                                    |
+08F3AC2C | E8 6F3C0000         | call plugpiki.8F3E8A0                                                                           |
+08F3AC31 | 6A 01               | push 1                                                                                          |
+08F3AC33 | 8B4D FC             | mov ecx,dword ptr ss:[ebp-4]                                                                    |
+08F3AC36 | E8 65170000         | call plugpiki.8F3C3A0                                                                           |
