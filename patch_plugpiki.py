@@ -69,6 +69,9 @@ def main(args: collections.abc.Sequence[str]):
             print(f"WARNING: There was an empty row in a file!")
             continue
 
+        if row[0].startswith("i18n"):
+            continue  # Hack to support inline translation notes in the CSV files.
+
         old_msg = row[0]; old_sjis = old_msg.encode("sjis") + b'\0'
 
         if not (old_locations := section_search(rdata, old_sjis)):
