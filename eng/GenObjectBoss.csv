@@ -1,7 +1,23 @@
-"黄ペレット","yellow pellet"
-"赤ペレット","red pellet"
-"青ペレット","blue pellet"
-"２０ペレット","20 pellet"
-"１０ペレット","10 pellet"
-"５ペレット","5 pellet"
-"１ペレット","1 pellet"
+"ボスの種類","boss type",
+"ペレットの種類","pellet type",
+"ペレットの色","pellet color",
+"ペレットの数","number of pellets",
+"ＵＦＯパーツ","UFO parts<TODO 1>","UFO parts<TODO 2>"
+"ダマグモ","damagumo",
+"ヘビガラス１","snake grass 1 (sphere)",
+"ヘビガラス２","snake grass 2 (prism)",
+"スライム","slime",
+"キングチャッピー","king chappy",
+"コガネ","kogane",
+"ポンガシ草","pongashi grass",
+"キングの背中","king’s back",
+"間欠泉１","geyser 1 (off)",
+"間欠泉２","geyser 2 (on)",
+"１ペレット","1 pellet",
+"５ペレット","5 pellet",
+"１０ペレット","10 pellet",
+"２０ペレット","20 pellet",
+"青ペレット","blue pellet",
+"赤ペレット","red pellet",
+"黄ペレット","yellow pellet",
+"ランダム","random<TODO 1>","random<TODO 2>"
