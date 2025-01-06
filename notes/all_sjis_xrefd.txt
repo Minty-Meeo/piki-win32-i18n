@@ -1,0 +1,181 @@
+_Print PlayerState
+1047c4a8: 'after motion を再生すべき ?\n'
+
+_Print pikiInf
+1047c7f0: ' SAVE CARD ***** %d です\n'
+1047c80c: '*** %d ピキ デス\n'
+
+_Print soundMgr
+10480024: '*************************** めっくた\n'
+1048004c: 'リリースは成功したのに、Create できません！\n'
+104800c4: '*************************** ました\n'
+104800fc: 'seSystem は閉店です!\n'
+10480220: '♪♪♪♪♪♪♪♪ try to erase %d event\n'
+
+demoFlag... These are cutscene names
+10480898: '赤コンテナに初めて接近'
+10480880: '黄コンテナに初めて接近'
+10480868: '青コンテナに初めて接近'
+10480854: '芽ピキに初めて接近'
+10480844: '赤ピキ抜いた'
+10480834: '黄ピキ抜いた'
+10480824: '青ピキ抜いた'
+1048080c: 'ピキ抜かずタイムアウト'
+10480800: 'カメラ説明'
+Where is "ペレット草バトルタイムアウト"?  Answer: Stolen by DemoPararms
+104807ec: '最初のペレットイン'
+104807d8: '初めて水門を開けた'
+104807c0: '初めてエンジンに接近'
+104807ac: 'エンジンを吸い込み'
+1048079c: '岩を押し始めた'
+1048078c: '岩を押し切った'
+10480774: 'コンテナ出し入れ説明'
+1048075c: 'ピキ全滅で１匹まく説明'
+1048074c: 'ボム持ち帰り'
+
+_Print demoFlag
+104808d4: 'リセットシマシタ！\n'
+
+_Error demoFlag
+104808f4: '超えた！'
+10480900: '登録は順序よく!\n'
+
+_Print interactBattle
+10484530: 'ちゃんとスティックしてません 口に\n'
+
+_Print workObject
+10489a18: 'つきざました！\n'
+10489c4c: '橋：完成しました\n'
+10489d34: 'こわした！ by やましたさん\n'
+
+seMgr
+10489f4c: 'SE テスト'
+
+_Print aiAction
+1048a1e8: 'キノコピキ：もとにもどる！\n'
+
+These two are mysterious... part of a char* []... still part of aiAction
+10482b34: 'なし'
+1048a3f0: '常に'
+
+AgeServer::StartGroup parameter in genMgr I guess?
+1048aa04: 'ファイル'
+1048aaf8: '１つだけうむ'  # A different permutation of １つだけ
+1048aba8: '最初から全部生む'  # aton
+1048ac00: '最初から生む（ランダム）'  # irnd
+1048b190: 'プレイヤー２を生む'  # navi
+1048b48c: 'マップパーツを生む'  # mpar
+1048b550: 'アイテムを生む'  # item
+
+_Print pikidoKill
+1048b984: '空きがないので残しません!\n'
+1048b9a0: '花ピキを残しました！\n'
+
+gmwin
+1048dff4: 'なにもできません'
+1048e008: 'ピキをだす？いれる？'
+1048e020: 'ピキをいれる？'
+1048e030: 'ピキをだす？'
+
+gwWin
+# Fourth one is a duplicate: ペレット
+1048e068: 'しんだピキ'
+1048e074: 'とったピキ'
+1048e080: 'きょうのけっか'
+
+idk
+1048e090: '停止'
+# A second instance of ランダム was already claimed earlier
+
+_Print aiAttack
+1048e98c: 'try to stick %s : いみない \n'
+1048e9ac: 'try to stick to coll-sphere (%s:code %s): いまはくっっつかない\n'
+1048e9ec: ' stick to 球 or チューブ\n'
+1048ea58: 'ざまし! ta no coll part\n'
+1048eaa0: '飛んでいるやつに攻撃！！！\n'
+
+_Print Transport
+1048f6d0: '小人数!!!\n'
+1048f728: '==== 開通ざました ====(%d) : %d (route %d)\n'
+1048fb40: 'おれにはムリデス\n'
+
+_Error hmrumblemgr
+10490974: '変な値が入ってます'
+
+_Print genBoss
+10491270: '  ＼  ё ／   \n'
+10491280: ' |    Λ -○->\n'
+10491290: '<-○--__   |  \n'
+
+genBoss unrelated
+10491338: 'ボスを生む'
+
+_Print effectMgr
+10495b48: 'エフェクトマネージャが２度構築されています。逝ってよし\n'
+
+_Error particlemanager
+10495bf0: 'チャイルドパーティクルの個数がが大きすぎます. \n'
+10495c20: 'パーティクルの個数がが大きすぎます. \n'
+10495c48: 'パーティクルジェネレイタの個数が大きすぎます。\n'
+
+_Print GameCourseClearSection
+10495f4c: 'パーティクルパックのテスト開始\n'
+
+GameCourseClearSection unrelated
+10495fd8: 'ファイナルリザルト'
+10496014: 'オプションセーブ'
+10496030: 'セーブメッセージ'
+10496054: 'ハイスコア'
+10496068: 'チャレンジモード・リザルト'
+10496098: 'チャレンジモード・コースセレクト'
+104960d8: 'ワールドマップポーズメニュー'
+10496100: 'ゲームオーバー'
+10496118: 'カウントダウン'
+10496134: 'プログレッシブモード'
+10496154: 'ゲーム情報'
+1049617c: 'ピクミン出し入れ'
+10496198: 'ワールドマップ'
+
+GameCourseClearSection (PAL Exclusive)
+1049624c: 'gameCourceClear'
+10496200: 'intテストだぴょ−ン'
+10496214: 'floatテストだぴょ−ン'
+
+_Print particleLoader
+104974a0: 'すでにロードされています。\n'
+
+_Error P2DPane
+10497a60: 'tag <%c%c%c%c> is not found. 逝ってよし\n'
+
+_Error drawmenubase
+1049813c: 'セレクトアイコンペインがありませんなァ。逝ってよし'
+
+_Print spectrumCursorMgr
+104981fc: '残像ペインがありませんなァ。逝ってよし！\n'
+
+_Error p2dtextbox
+1049aef0: '逝ってよし！\n'
+
+OgTestSection sprintf misc
+1049b534: '<<< チュ−トリアル >>> tx??の数(%d個)'
+1049b55c: '＞'
+1049b560: 'スタート'
+1049b56c: 'トータル成績'
+1049b57c: 'ポーズ (%d)'
+1049b588: 'リザルト'
+1049b594: '日記 (%d)'
+1049b5a0: 'チェック＆セレクト(%d)'
+1049b5b8: 'メモリーチェック(%d)'
+1049b5d0: 'テスト (%d)'
+1049b5dc: 'セーブセレクト (%d)'
+1049b5f0: 'チュートリアル (%d)'
+1049b604: 'タイトル (%d)'
+1049b614: '２Ｄスクリーン・セレクター'
+
+_Print OgSubSection
+1049c72c: '文字列が%d文字を超えました。\n'
+
+1049c8c8: 'tx??の数(%d個)'
+1049cdec: '地'
+1049cf80: '日目時私未知星大地横名'
+1049da44: '敵を生む'
