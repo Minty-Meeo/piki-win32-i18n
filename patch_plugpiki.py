@@ -60,6 +60,11 @@ def main(args: collections.abc.Sequence[str]):
     pe.patch_address(BASE_ADDR + 0x9aef4, tuple(b'\xc6\x80\x84\x01\x00\x00\xff'))  # onionsDiscovered  # mov byte ptr [eax + 0x184], 0xff
     pe.patch_address(BASE_ADDR + 0x9aefb, tuple(b'\x90' * 20))                     # Stub the call sites of the functions that would normally set the bitfields.
 
+    # Initialize PlayerState::mTutorial to false.  This spot is likely in PlayerState::PlayerState().
+    pe.patch_address(BASE_ADDR + 0x9af94, tuple(b'\xc6\x82\x85\x01\x00\x00\x00'))  # mov byte ptr ds:[edx + 0x185], 0
+    # The value is initialized in two places for redundancy, so change both.  This spot is likely in PlayerState::initGame().
+    pe.patch_address(BASE_ADDR + 0x9ac87, tuple(b'\xc6\x82\x85\x01\x00\x00\x00'))  # mov byte ptr ds:[edx + 0x185], 0
+
     rdata = pe.get_section(".rdata")
     i18n_blob = bytearray()
     cursor = BASE_ADDR + I18N_ADDR

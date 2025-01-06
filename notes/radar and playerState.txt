@@ -64,3 +64,23 @@ In two places?
 08F3AC31 | 6A 01               | push 1                                                                                          |
 08F3AC33 | 8B4D FC             | mov ecx,dword ptr ss:[ebp-4]                                                                    |
 08F3AC36 | E8 65170000         | call plugpiki.8F3C3A0                                                                           |
+
+
+
+
+PlayerState::isTutorial()
+
+Underlying member is set to 1 here:
+08F3AF94 | C682 85010000 01    | mov byte ptr ds:[edx+185],1                                                                                            |
+
+and here, twice:
+08F3AC87 | C682 85010000 01    | mov byte ptr ds:[edx+185],1                                                                                            |
+
+Looks like the actual isTutorial function can be found around here:
+08F3C1B1 | 8A82 85010000       | mov al,byte ptr ds:[edx+185]                                                                                           |
+
+PlayerState::update() checks the underlying member directly here.
+08F3C681 | 8A82 85010000       | mov al,byte ptr ds:[edx+185]                                                                                           |
+
+Reset to 0 here on Continue From Last Save
+08F3CADF | C681 85010000 00    | mov byte ptr ds:[ecx+185],0                                                                                            |
