@@ -1,4 +1,5 @@
 import binascii
+import codecs
 import collections
 import csv
 import glob
@@ -16,8 +17,9 @@ def accumulate_csvs(filepaths: list[str]):
     rows = list()
     for filepath in filepaths:
         for row in csv.reader(open(filepath)):
-            # Most software refuses to write jagged CSV files, so trailing empty cells must be removed.
-            rows.append([cell for cell in row if cell])
+            # Most software refuses to write jagged CSV files, so trailing empty cells must be removed.  Aditionally, CSV
+            # doesn't support C escape sequences, and I don't feel like switching to a more sophisticated database format.
+            rows.append([codecs.escape_decode(cell)[0].decode() for cell in row if cell])
     return rows
 #
 
@@ -74,8 +76,9 @@ def main(args: collections.abc.Sequence[str]):
             print(f"WARNING: There was an empty row in a file!")
             continue
 
+        # Hack to support inline translation notes in the CSV files.
         if row[0].startswith("i18n"):
-            continue  # Hack to support inline translation notes in the CSV files.
+            continue
 
         old_msg = row[0]; old_sjis = old_msg.encode("sjis") + b'\0'
 
@@ -90,8 +93,9 @@ def main(args: collections.abc.Sequence[str]):
             print(f"WARNING: No xrefs for any copy(s) of the message \"{old_msg}\" ({binascii.hexlify(old_sjis)}) were found! {old_locations}")
             continue
 
+        # Stop placeholder rows without translations from cluttering the log with errors
         if len(row) < 2:
-            continue  # Stops placeholder rows without translations from cluttering the log with errors
+            continue
 
         xrefs_chain = list(itertools.chain.from_iterable(xrefs))
         translations = row[1:]
