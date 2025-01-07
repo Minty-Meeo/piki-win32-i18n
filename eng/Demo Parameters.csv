@@ -2,5 +2,6 @@
 "コンテナ接近距離","Container approach distance",
 "芽ピキ接近距離","Sprout piki approach distance",
 "芽ピキ抜かずタイムアウト","Sprout piki no-pullout timeout",
-"ペレット草バトルタイムアウト","Pellet grass battle timeout","Pellet grass battle timeout <TODO>"
+"i18n: Second translation is stolen from Demo Names.csv",,
+"ペレット草バトルタイムアウト","Pellet grass battle timeout","Pellet Grass Battle Timeout"
 "エンジン接近距離","Engine approach distance",
