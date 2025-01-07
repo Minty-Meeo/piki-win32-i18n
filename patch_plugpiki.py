@@ -105,10 +105,10 @@ def main(args: collections.abc.Sequence[str]):
             continue
         
         for address, new_msg in zip(xrefs_chain, translations):
-            new_sjis = new_msg.encode("sjis") + b'\0'
+            new_utf8 = new_msg.encode("utf8") + b'\0'
             pe.patch_address(BASE_ADDR + address, tuple(struct.pack("<I", cursor)))
-            i18n_blob += new_sjis
-            cursor += len(new_sjis)
+            i18n_blob += new_utf8
+            cursor += len(new_utf8)
 
     i18n = lief.PE.Section(".i18n")
     i18n.content = i18n_blob
