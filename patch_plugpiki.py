@@ -34,7 +34,7 @@ def section_search(section: lief.Section, data: bytes, location: int = 0):
 def main(args: collections.abc.Sequence[str]):
     verbose = "-v" in args or "--verbose" in args
 
-    filepaths = [filename for filename in glob.glob(os.path.join(LANGUAGE, "*.csv"))]
+    filepaths = [filename for filename in glob.glob(os.path.join(LANGUAGE, "**/*.csv"), recursive=True)]
     filepaths.sort()  # Filepaths are sorted for determinism.
     rows = accumulate_csvs(filepaths)
 

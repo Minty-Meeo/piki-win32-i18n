@@ -26,7 +26,7 @@ def main(args: collections.abc.Sequence[str]):
     elimination_mode = "-e" in args or "--eliminaton" in args
     
     if elimination_mode:
-        filepaths = [filename for filename in glob.glob(os.path.join(LANGUAGE, "*.csv"))]
+        filepaths = [filename for filename in glob.glob(os.path.join(LANGUAGE, "**/*.csv"), recursive=True)]
         filepaths.sort()  # Filepaths are sorted for determinism.
         messages = accumulate_source_messages(filepaths)
 
