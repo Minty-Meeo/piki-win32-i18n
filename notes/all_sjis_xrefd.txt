@@ -115,11 +115,6 @@ GameCourseClearSection unrelated
 1049617c: 'ピクミン出し入れ'
 10496198: 'ワールドマップ'
 
-GameCourseClearSection (PAL Exclusive)
-1049624c: 'gameCourceClear'
-10496200: 'intテストだぴょ−ン'
-10496214: 'floatテストだぴょ−ン'
-
 _Print particleLoader
 104974a0: 'すでにロードされています。\n'
 
