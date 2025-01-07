@@ -1,31 +1,6 @@
-_Print PlayerState
-1047c4a8: 'after motion を再生すべき ?\n'
-
-_Print pikiInf
-1047c7f0: ' SAVE CARD ***** %d です\n'
-1047c80c: '*** %d ピキ デス\n'
-
-_Print soundMgr
-10480024: '*************************** めっくた\n'
-1048004c: 'リリースは成功したのに、Create できません！\n'
-104800c4: '*************************** ました\n'
-104800fc: 'seSystem は閉店です!\n'
-10480220: '♪♪♪♪♪♪♪♪ try to erase %d event\n'
-
-_Print demoFlag
-104808d4: 'リセットシマシタ！\n'
-
 _Error demoFlag
 104808f4: '超えた！'
 10480900: '登録は順序よく!\n'
-
-_Print interactBattle
-10484530: 'ちゃんとスティックしてません 口に\n'
-
-_Print workObject
-10489a18: 'つきざました！\n'
-10489c4c: '橋：完成しました\n'
-10489d34: 'こわした！ by やましたさん\n'
 
 seMgr
 10489f4c: 'SE テスト'
