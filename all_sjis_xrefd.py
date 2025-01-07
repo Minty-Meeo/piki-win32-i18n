@@ -35,7 +35,7 @@ def main(args: collections.abc.Sequence[str]):
 
     for address in range(BASE_ADDR + rdata.virtual_address, BASE_ADDR + rdata.virtual_address + rdata.size, 4):
         # Is something at this address xref'd ?
-        if not pe.xref(address):
+        if not (xrefs := pe.xref(address)):
             continue
         
         # Read until null terminator, however long it takes.
@@ -74,7 +74,7 @@ def main(args: collections.abc.Sequence[str]):
         if midstring_xref:
             continue
 
-        print(f"{address:x}: {repr(old_utf8)}")
+        print(f"{address:x}: {repr(old_utf8)} {xrefs}")
 #
 
 if __name__ == "__main__":
