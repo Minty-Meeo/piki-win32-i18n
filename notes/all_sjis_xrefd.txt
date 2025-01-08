@@ -1,6 +1,3 @@
-seMgr
-10489f4c: 'SE テスト'
-
 These two are mysterious... part of a char* []... still part of aiAction
 10482b34: 'なし'
 1048a3f0: '常に'
@@ -13,18 +10,6 @@ AgeServer::StartGroup parameter in genMgr I guess?
 1048b190: 'プレイヤー２を生む'  # navi
 1048b48c: 'マップパーツを生む'  # mpar
 1048b550: 'アイテムを生む'  # item
-
-gmwin
-1048dff4: 'なにもできません'
-1048e008: 'ピキをだす？いれる？'
-1048e020: 'ピキをいれる？'
-1048e030: 'ピキをだす？'
-
-gwWin
-# Fourth one is a duplicate: ペレット
-1048e068: 'しんだピキ'
-1048e074: 'とったピキ'
-1048e080: 'きょうのけっか'
 
 idk
 1048e090: '停止'
