@@ -31,45 +31,68 @@ def section_search(section: lief.Section, data: bytes, location: int = 0):
     return locations
 #
 
+def read_new_bin(group: str, string: str):
+    try:
+        return binascii.unhexlify(string)
+    except binascii.Error:
+        return open(os.path.join("asm", group, string), "rb").read()
+#
+
 def main(args: collections.abc.Sequence[str]):
     verbose = "-v" in args or "--verbose" in args
-
-    filepaths = [filename for filename in glob.glob(os.path.join(LANGUAGE, "**/*.csv"), recursive=True)]
-    filepaths.sort()  # Filepaths are sorted for determinism.
-    rows = accumulate_csvs(filepaths)
-
     pe = lief.PE.parse("./plugins/plugPiki.dll")
 
-    # Disable "cursor nuki!" panic modal that prevents the pluckaphone from working.
-    pe.patch_address(BASE_ADDR + 0xa500d, tuple(b'\x90' * 5))
-    pe.patch_address(BASE_ADDR + 0xa5110, tuple(b'\x90' * 5))
+    text = pe.get_section(".text")
+    filepaths = [filename for filename in glob.glob("patch/plugpiki/**/*.csv", recursive=True)]
+    rows = accumulate_csvs(filepaths)
 
-    # Disable "TekiPersonality::read:too old version:%d" panic modal that prevents GenObjectTeki version 7 from working.
-    pe.patch_address(BASE_ADDR + 0x885cf, tuple(b'\x90' * 5))
+    for row in rows:
+        if len(row) < 1:
+            print(f"WARNING: There was an empty row in a file!")
+            continue
 
-    # Disable world freeze when `Controller::keyClick(0x4000) == true` (spacebar).
-    pe.patch_address(BASE_ADDR + 0xb4860, tuple(b'\x31\xC0\x90'))  # xor eax, eax; nop
+        scent = binascii.unhexlify(row[0])
 
-    # Allocate ogRader resources on heap -1 instead of Movie heap to avoid running out of memory.  It running out of memory is an oversight caused by preloadLanguage() being skipped in this version.
-    pe.patch_address(BASE_ADDR + 0x22ea8, tuple(b'\x6A\xFF'))  # push -1
+        if not (locations := section_search(text, scent)):
+            print(f"ERROR: Scent ({binascii.hexlify(scent)}) was not found!")
+            continue
 
-    # Set displayPikiCount and onionsDiscovered bitfield to all ones, unlocking all Pikmin and Onions
-    pe.patch_address(BASE_ADDR + 0x9abcf, tuple(b'\xc6\x81\xac\x01\x00\x00\xff'))  # displayPikiCount  # mov byte ptr [ecx + 0x1ac], 0xff
-    pe.patch_address(BASE_ADDR + 0x9ac20, tuple(b'\xc6\x80\x84\x01\x00\x00\xff'))  # onionsDiscovered  # mov byte ptr [eax + 0x184], 0xff
-    pe.patch_address(BASE_ADDR + 0x9ac27, tuple(b'\x90' * 20))                     # Stub the call sites of the functions that would normally set the bitfields.
-    # The values are initialized in two places for redundancy, so change both.
-    pe.patch_address(BASE_ADDR + 0x9ae36, tuple(b'\xc6\x81\xac\x01\x00\x00\xff'))  # displayPikiCount  # mov byte ptr [ecx + 0x1ac], 0xff
-    pe.patch_address(BASE_ADDR + 0x9aef4, tuple(b'\xc6\x80\x84\x01\x00\x00\xff'))  # onionsDiscovered  # mov byte ptr [eax + 0x184], 0xff
-    pe.patch_address(BASE_ADDR + 0x9aefb, tuple(b'\x90' * 20))                     # Stub the call sites of the functions that would normally set the bitfields.
+        if len(locations) > 1:
+            print(f"ERROR: Scent ({binascii.hexlify(scent)}) was found at multiple locations! {locations}")
+            continue
 
-    # Initialize PlayerState::mTutorial to false.  This spot is likely in PlayerState::PlayerState().
-    pe.patch_address(BASE_ADDR + 0x9af94, tuple(b'\xc6\x82\x85\x01\x00\x00\x00'))  # mov byte ptr ds:[edx + 0x185], 0
-    # The value is initialized in two places for redundancy, so change both.  This spot is likely in PlayerState::initGame().
-    pe.patch_address(BASE_ADDR + 0x9ac87, tuple(b'\xc6\x82\x85\x01\x00\x00\x00'))  # mov byte ptr ds:[edx + 0x185], 0
+        # Stop placeholder rows with incomplete patch definitions
+        if len(row) < 3:
+            if verbose: print(f"INFO: There was an incomplete row in a file!")
+            continue
+
+        address = locations[0] + int(row[1])
+        known_bin = binascii.unhexlify(row[2])
+
+        found_bin = pe.get_content_from_virtual_address(address, len(known_bin))
+        if not known_bin == found_bin:
+            print(f"ERROR: Bytes found at {address:x} ({binascii.hexlify(found_bin)}) don't match known bytes! ({binascii.hexlify(known_bin)})")
+            continue
+
+        # Stop placeholder rows with incomplete patch definitions
+        if len(row) < 4:
+            if verbose: print(f"INFO: There was an incomplete row in a file!")
+            continue
+
+        new_bin = read_new_bin("plugpiki", row[3])
+        if not len(known_bin) == len(new_bin):
+            print(f"ERROR: New bytes are not the same length! known: {len(known_bin)}, new: {len(new_bin)}")
+            continue
+
+        pe.patch_address(address, tuple(new_bin))
 
     rdata = pe.get_section(".rdata")
     i18n_blob = bytearray()
     cursor = BASE_ADDR + I18N_ADDR
+
+    filepaths = [filename for filename in glob.glob(os.path.join(LANGUAGE, "**/*.csv"), recursive=True)]
+    filepaths.sort()  # Filepaths are sorted for determinism.
+    rows = accumulate_csvs(filepaths)
 
     for row in rows:
         if len(row) < 1:
