@@ -6,11 +6,6 @@ idk
 1048e090: '停止'
 # A second instance of ランダム was already claimed earlier
 
-_Print genBoss
-10491270: '  ＼  ё ／   \n'
-10491280: ' |    Λ -○->\n'
-10491290: '<-○--__   |  \n'
-
 1049c8c8: 'tx??の数(%d個)'
 1049cdec: '地'
 1049cf80: '日目時私未知星大地横名'
