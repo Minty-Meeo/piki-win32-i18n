@@ -33,9 +33,53 @@ def section_search(section: lief.Section, data: bytes, base_address: int, locati
     return locations
 #
 
-def read_new_bin(group: str, string: str):
+def acquire_bytes(group: str, string: str):
+    if string.startswith('!'):
+        return binascii.unhexlify(string[1:3]) * int(string[4:])
     try:
         return binascii.unhexlify(string)
     except binascii.Error:
         return open(os.path.join("asm", group, string), "rb").read()
+#
+
+def sniff_search_patch(verbose, group: str, pe: lief.PE, section: lief.Section, rows: list, base_address: int):
+    for row in rows:
+        if len(row) < 1:
+            print(f"WARNING: There was an empty row in a file!")
+            continue
+
+        scent = binascii.unhexlify(row[0])
+
+        if not (locations := section_search(section, scent, base_address)):
+            print(f"ERROR: Scent ({binascii.hexlify(scent)}) was not found!")
+            continue
+
+        if len(locations) > 1:
+            print(f"ERROR: Scent ({binascii.hexlify(scent)}) was found at multiple locations! {locations}")
+            continue
+
+        # Stop placeholder rows with incomplete patch definitions
+        if len(row) < 3:
+            if verbose: print(f"INFO: There was an incomplete row in a file!")
+            continue
+
+        address = locations[0] + int(row[1])
+        known_bin = acquire_bytes(group, row[2])
+
+        found_bin = pe.get_content_from_virtual_address(address, len(known_bin))
+        if not known_bin == found_bin:
+            print(f"ERROR: Bytes found at {address:x} ({binascii.hexlify(found_bin)}) don't match known bytes! ({binascii.hexlify(known_bin)})")
+            continue
+
+        # Stop placeholder rows with incomplete patch definitions
+        if len(row) < 4:
+            if verbose: print(f"INFO: There was an incomplete row in a file!")
+            continue
+
+        new_bin = acquire_bytes(group, row[3])
+        if not len(known_bin) == len(new_bin):
+            print(f"ERROR: New bytes are not the same length! known: {len(known_bin)}, new: {len(new_bin)}")
+            continue
+
+        pe.patch_address(address, tuple(new_bin))
 #
