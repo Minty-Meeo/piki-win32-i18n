@@ -2,15 +2,6 @@ These two are mysterious... part of a char* []... still part of aiAction
 10482b34: 'なし'
 1048a3f0: '常に'
 
-AgeServer::StartGroup parameter in genMgr I guess?
-1048aa04: 'ファイル'
-1048aaf8: '１つだけうむ'  # A different permutation of １つだけ
-1048aba8: '最初から全部生む'  # aton
-1048ac00: '最初から生む（ランダム）'  # irnd
-1048b190: 'プレイヤー２を生む'  # navi
-1048b48c: 'マップパーツを生む'  # mpar
-1048b550: 'アイテムを生む'  # item
-
 idk
 1048e090: '停止'
 # A second instance of ランダム was already claimed earlier
@@ -20,13 +11,9 @@ _Print genBoss
 10491280: ' |    Λ -○->\n'
 10491290: '<-○--__   |  \n'
 
-genBoss unrelated
-10491338: 'ボスを生む'
-
 _Print OgSubSection
 1049c72c: '文字列が%d文字を超えました。\n'
 
 1049c8c8: 'tx??の数(%d個)'
 1049cdec: '地'
 1049cf80: '日目時私未知星大地横名'
-1049da44: '敵を生む'
