@@ -5,7 +5,3 @@ These two are mysterious... part of a char* []... still part of aiAction
 idk
 1048e090: '停止'
 # A second instance of ランダム was already claimed earlier
-
-1049c8c8: 'tx??の数(%d個)'
-1049cdec: '地'
-1049cf80: '日目時私未知星大地横名'
