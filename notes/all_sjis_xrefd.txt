@@ -1,7 +1,3 @@
-_Error demoFlag
-104808f4: '超えた！'
-10480900: '登録は順序よく!\n'
-
 seMgr
 10489f4c: 'SE テスト'
 
@@ -34,9 +30,6 @@ idk
 1048e090: '停止'
 # A second instance of ランダム was already claimed earlier
 
-_Error hmrumblemgr
-10490974: '変な値が入ってます'
-
 _Print genBoss
 10491270: '  ＼  ё ／   \n'
 10491280: ' |    Λ -○->\n'
@@ -44,20 +37,6 @@ _Print genBoss
 
 genBoss unrelated
 10491338: 'ボスを生む'
-
-_Error particlemanager
-10495bf0: 'チャイルドパーティクルの個数がが大きすぎます. \n'
-10495c20: 'パーティクルの個数がが大きすぎます. \n'
-10495c48: 'パーティクルジェネレイタの個数が大きすぎます。\n'
-
-_Error P2DPane
-10497a60: 'tag <%c%c%c%c> is not found. 逝ってよし\n'
-
-_Error drawmenubase
-1049813c: 'セレクトアイコンペインがありませんなァ。逝ってよし'
-
-_Error p2dtextbox
-1049aef0: '逝ってよし！\n'
 
 _Print OgSubSection
 1049c72c: '文字列が%d文字を超えました。\n'
