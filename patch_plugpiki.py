@@ -83,14 +83,14 @@ def main(args: collections.abc.Sequence[str]):
         old_msg = row[0]; old_sjis = old_msg.encode("sjis") + b'\0'
 
         if not (old_locations := section_search(rdata, old_sjis)):
-            print(f"WARNING: Message \"{old_msg}\" ({binascii.hexlify(old_sjis)}) was not found!")
+            print(f"WARNING: Message {repr(old_msg)} ({binascii.hexlify(old_sjis)}) was not found!")
             continue
 
         if len(old_locations) > 1:
-            if verbose: print(f"INFO: Message \"{old_msg}\" ({binascii.hexlify(old_sjis)}) was found at multiple locations! {old_locations}")
+            if verbose: print(f"INFO: Message {repr(old_msg)} ({binascii.hexlify(old_sjis)}) was found at multiple locations! {old_locations}")
 
         if not (xrefs := [xref for old_location in old_locations if (xref := pe.xref(old_location))]):
-            print(f"WARNING: No xrefs for any copy(s) of the message \"{old_msg}\" ({binascii.hexlify(old_sjis)}) were found! {old_locations}")
+            print(f"WARNING: No xrefs for any copy(s) of the message {repr(old_msg)} ({binascii.hexlify(old_sjis)}) were found! {old_locations}")
             continue
 
         # Stop placeholder rows without translations from cluttering the log with errors
@@ -101,7 +101,7 @@ def main(args: collections.abc.Sequence[str]):
         translations = row[1:]
 
         if len(xrefs_chain) != len(translations):
-            print(f"ERROR: \"{old_msg}\" ({binascii.hexlify(old_sjis)}) requires {len(xrefs_chain)} translations, but {len(translations)} were given!")
+            print(f"ERROR: {repr(old_msg)} ({binascii.hexlify(old_sjis)}) requires {len(xrefs_chain)} translations, but {len(translations)} were given!")
             continue
         
         for address, new_msg in zip(xrefs_chain, translations):
