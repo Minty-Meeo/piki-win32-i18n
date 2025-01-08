@@ -1,0 +1,6 @@
+"try to stick %s : いみない \n","try to stick %s : no good\n"
+"try to stick to coll-sphere (%s:code %s): いまはくっっつかない\n","try to stick to coll-sphere (%s:code %s): not sticking now\n"
+" stick to 球 or チューブ\n"," stick to sphere or tube\n"
+"i18n: This one gave me a headache.  “ta no” is clearly romanji for “たの”, and that roughly seems to mean “other” in this context.  None of the machine translators agree on the meaning of “ざまし”.",
+"ざまし! ta no coll part\n","Zamashi! Other coll part\n"
+"飛んでいるやつに攻撃！！！\n","Attack the flying thing!!!\n"

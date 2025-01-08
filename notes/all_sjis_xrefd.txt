@@ -5,9 +5,6 @@ _Error demoFlag
 seMgr
 10489f4c: 'SE テスト'
 
-_Print aiAction
-1048a1e8: 'キノコピキ：もとにもどる！\n'
-
 These two are mysterious... part of a char* []... still part of aiAction
 10482b34: 'なし'
 1048a3f0: '常に'
@@ -20,10 +17,6 @@ AgeServer::StartGroup parameter in genMgr I guess?
 1048b190: 'プレイヤー２を生む'  # navi
 1048b48c: 'マップパーツを生む'  # mpar
 1048b550: 'アイテムを生む'  # item
-
-_Print pikidoKill
-1048b984: '空きがないので残しません!\n'
-1048b9a0: '花ピキを残しました！\n'
 
 gmwin
 1048dff4: 'なにもできません'
@@ -41,18 +34,6 @@ idk
 1048e090: '停止'
 # A second instance of ランダム was already claimed earlier
 
-_Print aiAttack
-1048e98c: 'try to stick %s : いみない \n'
-1048e9ac: 'try to stick to coll-sphere (%s:code %s): いまはくっっつかない\n'
-1048e9ec: ' stick to 球 or チューブ\n'
-1048ea58: 'ざまし! ta no coll part\n'
-1048eaa0: '飛んでいるやつに攻撃！！！\n'
-
-_Print Transport
-1048f6d0: '小人数!!!\n'
-1048f728: '==== 開通ざました ====(%d) : %d (route %d)\n'
-1048fb40: 'おれにはムリデス\n'
-
 _Error hmrumblemgr
 10490974: '変な値が入ってます'
 
@@ -64,28 +45,16 @@ _Print genBoss
 genBoss unrelated
 10491338: 'ボスを生む'
 
-_Print effectMgr
-10495b48: 'エフェクトマネージャが２度構築されています。逝ってよし\n'
-
 _Error particlemanager
 10495bf0: 'チャイルドパーティクルの個数がが大きすぎます. \n'
 10495c20: 'パーティクルの個数がが大きすぎます. \n'
 10495c48: 'パーティクルジェネレイタの個数が大きすぎます。\n'
-
-_Print GameCourseClearSection
-10495f4c: 'パーティクルパックのテスト開始\n'
-
-_Print particleLoader
-104974a0: 'すでにロードされています。\n'
 
 _Error P2DPane
 10497a60: 'tag <%c%c%c%c> is not found. 逝ってよし\n'
 
 _Error drawmenubase
 1049813c: 'セレクトアイコンペインがありませんなァ。逝ってよし'
-
-_Print spectrumCursorMgr
-104981fc: '残像ペインがありませんなァ。逝ってよし！\n'
 
 _Error p2dtextbox
 1049aef0: '逝ってよし！\n'
