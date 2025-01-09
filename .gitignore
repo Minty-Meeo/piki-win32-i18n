@@ -3,7 +3,6 @@ sys
 plugins
 .~lock*
 *.o
-*.bin
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
