@@ -1,8 +1,10 @@
 import binascii
 import codecs
 import csv
+import itertools
 import lief
 import os
+import struct
 
 def accumulate_csvs(filepaths: list[str]):
     rows = list()
@@ -42,7 +44,57 @@ def acquire_bytes(group: str, string: str):
         return open(os.path.join("asm", group, string), "rb").read()
 #
 
-def sniff_search_patch(verbose, group: str, pe: lief.PE, section: lief.Section, rows: list, base_address: int):
+def xrefd_string_replace(verbose: bool, group: str, pe: lief.PE, section: lief.Section, rows: list, base_address: int, i18n_address: int):
+    i18n_blob = bytearray()
+    cursor = base_address + i18n_address
+
+    for row in rows:
+        if len(row) < 1:
+            print(f"WARNING: There was an empty row in a file!")
+            continue
+
+        # Hack to support inline translation notes in the CSV files.
+        if row[0].startswith("i18n"):
+            continue
+
+        old_msg = row[0]; old_sjis = old_msg.encode("sjis") + b'\0'
+
+        if not (old_locations := section_search(section, old_sjis, base_address)):
+            print(f"WARNING: Message {repr(old_msg)} ({binascii.hexlify(old_sjis)}) was not found!")
+            continue
+
+        if len(old_locations) > 1:
+            if verbose: print(f"INFO: Message {repr(old_msg)} ({binascii.hexlify(old_sjis)}) was found at multiple locations! {old_locations}")
+
+        if not (xrefs := [xref for old_location in old_locations if (xref := pe.xref(old_location))]):
+            print(f"WARNING: No xrefs for any copy(s) of the message {repr(old_msg)} ({binascii.hexlify(old_sjis)}) were found! {old_locations}")
+            continue
+
+        # Stop placeholder rows without translations from cluttering the log with errors
+        if len(row) < 2:
+            continue
+
+        xrefs_chain = list(itertools.chain.from_iterable(xrefs))
+        translations = row[1:]
+
+        if len(xrefs_chain) != len(translations):
+            print(f"ERROR: {repr(old_msg)} ({binascii.hexlify(old_sjis)}) requires {len(xrefs_chain)} translations, but {len(translations)} were given!")
+            continue
+        
+        for address, new_msg in zip(xrefs_chain, translations):
+            new_utf8 = new_msg.encode("utf8") + b'\0'
+            pe.patch_address(base_address + address, tuple(struct.pack("<I", cursor)))
+            i18n_blob += new_utf8
+            cursor += len(new_utf8)
+
+    i18n = lief.PE.Section(".i18n")
+    i18n.content = i18n_blob
+    i18n.virtual_address = i18n_address
+
+    pe.add_section(i18n, lief.PE.SECTION_TYPES.DATA)
+#
+
+def sniff_search_patch(verbose: bool, group: str, pe: lief.PE, section: lief.Section, rows: list, base_address: int):
     for row in rows:
         if len(row) < 1:
             print(f"WARNING: There was an empty row in a file!")
